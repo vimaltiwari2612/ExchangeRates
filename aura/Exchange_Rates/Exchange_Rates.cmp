@@ -1,0 +1,74 @@
+<aura:component implements="force:appHostable" controller="ExchangeRatesController">
+    
+    <aura:attribute name="exchangeRates" type="Object[]" default="{}"/>
+    <!-- Attribute Declaration For Pagination -->
+    <aura:attribute name="exchangeRatesPerPage" type="Object[]"/>
+    <aura:attribute name="startPage" type="Integer" />
+    <aura:attribute name="endPage" type="Integer"/>
+    <aura:attribute name="pageNumber" type="Integer" />
+    <aura:attribute name="totalPages" type="Integer"/>
+    <aura:attribute name="totalRecords" type="Integer"/>
+    <aura:attribute name="pageSize" type="Integer" default="10"/>
+    <!-- Attribute Declaration For Pagination End-->
+    <aura:attribute name="columns" type="List" 
+                    description="List of column header names and types to display"/>
+    <aura:attribute name="currencyOptions" type="Object[]"
+                    description="List of currency codes data"/>
+    <aura:attribute name="selectedCurrency" type="String" 
+                    description="Selected currency values" default="All Options"/>
+    <aura:attribute name="refreshInProgress" type="Boolean" 
+                    description="Refresh is in progress" default="false"/>    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    
+    <div class="slds-m-around_small slds-border_bottom slds-border_top slds-border_left slds-border_right"> 
+        <div class="slds-page-header" role="banner">
+            <div class="slds-grid"> 
+                <div class="slds-col slds-size--1-of-4">
+                    <span class="slds-page-header__title ">
+                        Choose Base Currency
+                        <lightning:icon iconName="utility:info" variant="info" size="xx-small" title="Multiple base currencies can be selected. Refreshing data with multiple base currencies may take few minutes."/>
+                    </span>
+                    <aura:if isTrue="{!v.currencyOptions}">
+                        <c:Multi_Select_Picklist aura:id="multiSelect" allOptions="{!v.currencyOptions}" selectedValue="{!v.selectedCurrency}"/>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-size--3-of-4 slds-m-top--small slds-p-around--small">
+                    <lightning:button disabled="{!v.selectedCurrency == '' || v.refreshInProgress}" 
+                                      variant="brand" 
+                                      aura:id = "refreshButton"
+                                      label="Refresh Data"
+                                      iconName="utility:refresh"
+                                      title="Refresh Exchange Rates corresponding to the selected Base Currency"
+                                      onclick="{!c.getRefreshedRates}" />
+                </div>
+            </div>          
+        </div>
+        <div>
+            <div class="slds-p-horizontal_small slds-box slds-scrollable--y">
+                <span class="slds-p-around_small slds-text-heading_small">
+                    Total Records : {!v.totalRecords}
+                </span>
+                <lightning:datatable data="{!v.exchangeRatesPerPage}" columns="{! v.columns }" keyField="baseCurrencyCode"  hideCheckboxColumn="true"/>
+                <div class="slds-m-top_medium" >
+                    <lightning:buttonGroup >
+                        <span class="slds-p-around_small">
+                            <lightning:button label="Previous" disabled="{!v.startPage == 0}"  
+                                              onclick="{!c.previous}" variant="brand"
+                                              iconName='utility:back'/> 
+                        </span>
+                        <span class="slds-p-around_small slds-text-align_center">
+                            Page {!v.pageNumber} / {!v.totalPages} 
+                        </span>
+                        <span class="slds-p-around_small">
+                            <lightning:button label="Next" disabled="{!v.endPage >= v.totalRecords}" 
+                                              onclick="{!c.next}" variant="brand"
+                                              iconName='utility:forward' iconPosition='right'/>
+                        </span>
+                    </lightning:buttonGroup>
+                </div>
+            </div>
+        </div>        
+    </div>
+    
+</aura:component>

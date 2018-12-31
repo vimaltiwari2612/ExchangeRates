@@ -1,0 +1,49 @@
+<aura:component >
+    <aura:attribute name="allOptions" type="Object[]"/>
+    <aura:attribute name="options" type="Object[]"/>
+    <aura:attribute name="selectedValue" type="String"/>
+    <aura:attribute name="selectedValues" type="String[]" default="[]"/>
+	<aura:attribute name="infoText" type="String" default="No option selected"/>
+    <aura:attribute name="dropdownOver" type="Boolean" default="false" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:method name="invokeInit" action="{!c.doInit}"/>
+    <div> 
+        <div class="slds-form-element">
+            <div class="slds-form-element__control">
+                <div class="slds-combobox_container slds-size--1-of-1">
+                    <div aura:id="triggerDiv" class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-combobox-picklist" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                            <input style="cursor:pointer" type="text" class="slds-input slds-combobox__input" id="combobox-unique-id-2" aria-controls="listbox-unique-id" autocomplete="off" role="textbox" placeholder="{!v.infoText}" readonly="true" onclick="{!c.togglePicklist}"/>
+                            <span class="slds-icon_container slds-icon-utility-down slds-input__icon slds-input__icon_right" title="Description of icon when needed">
+                                <lightning:icon iconName="utility:down" size="xx-small"/>
+                            </span>
+                        </div>
+						<div id="listbox-unique-id" class="slds-dropdown  slds-dropdown_fluid slds-dropdown_length-5" role="listbox">
+							<ul class="slds-listbox slds-listbox_vertical" role="presentation">
+								<aura:iteration items="{!v.options}" var="currentOption">
+									<li role="presentation" class="slds-listbox__item" data-text="{!currentOption.code}" data-selected="{!currentOption.selected}" onclick="{!c.selectvalue}">
+										<div id="listbox-option-unique-id-01" class="{!' slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media_center' + (currentOption.selected == true ? ' slds-is-selected' : '')}" role="option">
+											<span class="slds-media__figure">
+												<lightning:icon iconName="utility:check" size="x-small" class="slds-icon-utility-check slds-current-color slds-listbox__icon-selected slds-icon_container" />
+											</span> 
+											<div class="slds-media__body slds-grid">
+												<div class="slds-truncate slds-float_right slds-p-left_small slds-p-left_small" title="{!currentOption.code}" > {!currentOption.code}</div>
+											</div>
+										</div>
+									</li>
+								</aura:iteration>
+							</ul>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-text-body_regular slds-size--1-of-1">
+            <aura:iteration items="{!v.selectedValues}" var="selectedOption">
+                <span class="slds-pill"><a href="javascript:void(0);" class="slds-pill__label slds-p-around_xxx-small" >{!selectedOption}</a></span>
+            </aura:iteration>
+        </div>
+    </div>
+</aura:component>

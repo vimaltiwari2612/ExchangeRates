@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="Send Selected Picklist values">
+    <aura:attribute name="selectedValue" type="String" />
+</aura:event>
